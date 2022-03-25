@@ -1,42 +1,57 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 module.exports = {
   entry: {
-    main: path.resolve(__dirname, "src/index.js"),
-    form: path.resolve(__dirname, "src/form/form.js"),
+    main: path.join(__dirname, "src/index.js"),
+    form: path.join(__dirname, "src/form/form.js"),
+    topbar: path.join(__dirname, "src/assets/javascripts/topbar.js"),
   },
   output: {
-    path: path.resolve(__dirname, "dist"),
+    path: path.join(__dirname, "dist"),
     filename: "[name].bundle.js",
   },
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.js/,
+        exclude: /(node_modules)/,
+        use: ["babel-loader"],
+      },
+      {
         test: /\.scss$/i,
-        exclude: /node_modules/,
-        use: ["babel-loader", "style-loader", "css-loader", "sass-loader"],
+        use: ["style-loader", "css-loader", "sass-loader"],
       },
     ],
   },
   plugins: [
+    new CleanWebpackPlugin(),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: "./src/assets/images/*",
+          to: "assets/images/[name][ext]",
+        },
+      ],
+    }),
     new HtmlWebpackPlugin({
       filename: "index.html",
-      template: path.resolve(__dirname, "src/index.html"),
-      chunks: ["main"],
+      template: path.join(__dirname, "./src/index.html"),
     }),
     new HtmlWebpackPlugin({
       filename: "form.html",
-      template: path.resolve(__dirname, "src/form/form.html"),
-      chunks: ["form"],
+      template: path.join(__dirname, "./src/form/form.html"),
+      chunks: ["form", "topbar"],
     }),
   ],
+  stats: "minimal",
   devtool: "source-map",
   mode: "development",
   devServer: {
+    open: false,
     static: path.resolve(__dirname, "./dist"),
-    open: true,
     port: 4000,
   },
 };
