@@ -4,7 +4,8 @@ const CopyWebpackPlugin = require("copy-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 module.exports = {
-  entry: {
+  entry: 
+  {
     main: path.join(__dirname, "src/index.js"),
     form: path.join(__dirname, "src/form/form.js"),
     topbar: path.join(__dirname, "src/assets/javascripts/topbar.js"),
