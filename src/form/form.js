@@ -5,7 +5,7 @@ const form = document.querySelector("form");
 const errorElement = document.querySelector("#errors");
 let errors = [];
 
-form.addEventListener("submit", async event => {
+form.addEventListener("submit", async (event) => {
   event.preventDefault();
   const formData = new FormData(form);
   const article = Object.fromEntries(formData.entries());
@@ -16,8 +16,8 @@ form.addEventListener("submit", async event => {
         method: "POST",
         body: json,
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       });
       const body = await response.json();
       console.log(body);
@@ -28,12 +28,16 @@ form.addEventListener("submit", async event => {
 });
 
 const formIsValid = (article) => {
-  errors = [];
-  if (!article.author || !article.category || !article.content) {
+  if (
+    !article.author ||
+    !article.category ||
+    !article.content ||
+    !article.img ||
+    !article.title
+  ) {
     errors.push("Vous devez renseigner tous les champs");
-  }
-  if (article.content.length < 20) {
-    errors.push("Le contenu de votre article est trop court !");
+  } else {
+    errors = [];
   }
   if (errors.length) {
     let errorHTML = "";
