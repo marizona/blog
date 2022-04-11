@@ -1,9 +1,6 @@
 import "./assets/styles/styles.scss";
 import "./index.scss";
 
-import "./assets/styles/styles.scss";
-import "./index.scss";
-
 const articleContainerElement = document.querySelector(".articles-container");
 
 const createArticles = (articles) => {
@@ -16,7 +13,14 @@ const createArticles = (articles) => {
   alt="profile"
 />
 <h2>${article.title}</h2>
-<p class="article-author">${article.author} - ${article.category}</p>
+<p class="article-author">${article.author} - ${new Date(
+      article.createdAt
+    ).toLocaleDateString("fr-FR", {
+      weekday: "long",
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+    })}</p>
 <p class="article-content">
   ${article.content}
 </p>
@@ -28,6 +32,26 @@ const createArticles = (articles) => {
   });
   articleContainerElement.innerHTML = "";
   articleContainerElement.append(...articlesDOM);
+  const deleteButtons = articleContainerElement.querySelectorAll(".btn-danger");
+  deleteButtons.forEach((button) => {
+    button.addEventListener("click", async (event) => {
+      try {
+        const target = event.target;
+        const articleId = target.dataset.id;
+        const response = await fetch(
+          `https://restapi.fr/api/article/${articleId}`,
+          {
+            method: "DELETE",
+          }
+        );
+        const body = await response.json();
+        console.log(body);
+        fetchArticle();
+      } catch (e) {
+        console.log("e : ", e);
+      }
+    });
+  });
 };
 
 const fetchArticle = async () => {
