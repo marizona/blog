@@ -5,6 +5,9 @@ const form = document.querySelector("form");
 const errorElement = document.querySelector("#errors");
 const btnCancel = document.querySelector(".btn-secondary")
 let errors = [];
+const params= new URL(location.href)
+const articleId = params.searchParams.get('id')
+
 
 btnCancel.addEventListener("click", () => {
   location.assign("./index.html")
